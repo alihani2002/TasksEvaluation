@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TasksEvaluation.Infrastructure.Services
 {
-    internal class GroupService
+    public class GroupService
     {
     }
 }

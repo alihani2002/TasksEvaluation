@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace TasksEvaluation.Infrastructure.Services
 {
-    internal class AssignmentService
+    public class AssignmentService
     {
+
     }
 }
