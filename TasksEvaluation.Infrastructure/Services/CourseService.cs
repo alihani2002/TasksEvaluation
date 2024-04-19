@@ -46,8 +46,7 @@ namespace TasksEvaluation.Infrastructure.Services
 
         public async Task Update(CourseDTO model)
         {
-            var existingData = await _courseRepository.GetById(model.Id);
-            _courseMapper.MapModel(model);
+            var existingData = _courseMapper.MapModel(model);
             existingData.UpdateDate = DateTime.Now;
             await _courseRepository.Update(existingData);
         }

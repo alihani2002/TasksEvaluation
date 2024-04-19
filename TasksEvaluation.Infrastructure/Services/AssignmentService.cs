@@ -46,8 +46,7 @@ namespace TasksEvaluation.Infrastructure.Services
 
         public async Task Update(AssignmentDTO model)
         {
-            var existingData = await _assignmentRepository.GetById(model.Id);
-            _assignmentMapper.MapModel(model);
+            var existingData = _assignmentMapper.MapModel(model);
             existingData.UpdateDate = DateTime.Now;
             await _assignmentRepository.Update(existingData);
         }

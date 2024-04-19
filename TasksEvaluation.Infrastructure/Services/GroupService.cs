@@ -46,8 +46,7 @@ namespace TasksEvaluation.Infrastructure.Services
 
         public async Task Update(GroupDTO model)
         {
-            var existingData = await _groupRepository.GetById(model.Id);
-            _groupMapper.MapModel(model);
+            var existingData = _groupMapper.MapModel(model);
             existingData.UpdateDate = DateTime.Now;
             await _groupRepository.Update(existingData);
         }
