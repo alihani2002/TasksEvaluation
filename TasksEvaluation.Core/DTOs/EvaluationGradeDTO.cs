@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TasksEvaluation.Core.DTOs
 {
-    public class EvaluationGradeDTO
+    public class EvaluationGradeDTO : BaseDTO
     {
         public string Grade { get; set; }
     }

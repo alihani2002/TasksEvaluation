@@ -7,7 +7,7 @@ using TasksEvaluation.Core.Filters;
 
 namespace TasksEvaluation.Core.DTOs
 {
-    public class AssignmentDTO
+    public class AssignmentDTO : BaseDTO
     {
         public string Title { get; set; }
         public string Description { get; set; }

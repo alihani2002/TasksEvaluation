@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TasksEvaluation.Core.DTOs
 {
-    public class CourseDTO
+    public class CourseDTO : BaseDTO
     {
         public string Title { get; set; }
         public bool IsCompleted { get; set; } = false;

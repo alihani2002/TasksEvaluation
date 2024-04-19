@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TasksEvaluation.Core.DTOs
 {
-    public class SolutionDTO
+    public class SolutionDTO : BaseDTO
     {
         public string SolutionFile { get; set; }
         public string Notes { get; set; }

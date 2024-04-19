@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TasksEvaluation.Core.DTOs
 {
-    public class GroupDTO
+    public class GroupDTO : BaseDTO
     {
         public string Title { get; set; }
     }
