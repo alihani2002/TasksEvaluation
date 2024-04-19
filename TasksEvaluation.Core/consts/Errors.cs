@@ -19,7 +19,7 @@
         public const string OnlyNumbersAndLetters = "Only Arabic/English letters or digits are allowed.";
         public const string DenySpecialCharacters = "Special characters are not allowed.";
 		public const string InvalidMobileNumber = "Invalid mobile number.";
-        //public const string InvalidNationalId = "Invalid national ID.";
+        public const string InvalidNationalId = "Invalid national ID.";
         public const string EmptyImage = "Please select an image.";
         public const string DateValidation = "End date must be later than start date.";
         public const string MaxHourDuration = "Duration Must be more Than 1 Hour less Than 24 Hours.";
