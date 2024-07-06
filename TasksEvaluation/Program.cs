@@ -2,6 +2,9 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TasksEvaluation.Core.DTOs;
 using TasksEvaluation.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using TasksEvaluation.Areas.Identity.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConfig"));
 
 });
+
+builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultUI()
+    .AddDefaultTokenProviders();
 
 // Add Fluent Validation
 builder.Services.AddValidatorsFromAssembly(typeof(CourseDTO).Assembly);
@@ -41,4 +49,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapRazorPages();
 app.Run();

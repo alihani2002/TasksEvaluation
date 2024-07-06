@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TasksEvaluation.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TasksEvaluation.Infrastructure.Data;
 namespace TasksEvaluation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240706191808_SeedRoles")]
+    partial class SeedRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,7 +267,7 @@ namespace TasksEvaluation.Infrastructure.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Assignments", (string)null);
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("TasksEvaluation.Core.Entities.Business.Course", b =>
@@ -293,7 +296,7 @@ namespace TasksEvaluation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("TasksEvaluation.Core.Entities.Business.EvaluationGrade", b =>
@@ -319,7 +322,7 @@ namespace TasksEvaluation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EvaluationGrades", (string)null);
+                    b.ToTable("EvaluationGrades");
                 });
 
             modelBuilder.Entity("TasksEvaluation.Core.Entities.Business.Group", b =>
@@ -350,7 +353,7 @@ namespace TasksEvaluation.Infrastructure.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("TasksEvaluation.Core.Entities.Business.Solution", b =>
@@ -394,7 +397,7 @@ namespace TasksEvaluation.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Solutions", (string)null);
+                    b.ToTable("Solutions");
                 });
 
             modelBuilder.Entity("TasksEvaluation.Core.Entities.Business.Student", b =>
@@ -436,7 +439,7 @@ namespace TasksEvaluation.Infrastructure.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
