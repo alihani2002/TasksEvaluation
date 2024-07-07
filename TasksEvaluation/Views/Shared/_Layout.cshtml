@@ -7,20 +7,23 @@
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
 </head>
 
 <body>
     <button class="btn btn-primary toggle-btn" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
     <div class="sidebar">
-        <a href="#">Home</a>
-        <a href="#">Dashboard</a>
-        <a href="#">Settings</a>
-        <a href="#">Profile</a>
-        <a href="#">Help</a>
-        <partial name="_LoginPartial" />
+        <div>
+            <h3><a href="#">TaskEvaluation</a></h3>
+            <a href="#">Dashboard</a>
+            <a href="#">Settings</a>
+            <a href="#">Profile</a>
+            <a href="#">Help</a>
+        </div>
+        <div>
+            <partial name="_LoginPartial" />
+        </div>
     </div>
-    <div class="container">
+    <div class="content">
         @RenderBody()
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
