@@ -30,6 +30,7 @@ namespace TasksEvaluation.Infrastructure.Services
             if (model == null) throw new ArgumentNullException(nameof(model));
 
             var entity = _studentMapper.MapModel(model);
+            if (entity is null) throw new ArgumentNullException(nameof(entity));
             entity.EntryDate = DateTime.Now;
             var createdEntity = await _studentRepository.Create(entity);
             return _studentDTOMapper.MapModel(createdEntity);
