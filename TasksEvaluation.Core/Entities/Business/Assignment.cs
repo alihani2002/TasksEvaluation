@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using TasksEvaluation.Consts;
 using TasksEvaluation.Core.Entities.Common;
 using TasksEvaluation.Core.Filters;

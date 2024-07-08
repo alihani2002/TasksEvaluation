@@ -1,0 +1,41 @@
+﻿@model IEnumerable<TasksEvaluation.Core.DTOs.StudentDTO>
+
+@{
+    ViewData["Title"] = "Student List";
+}
+
+<h2>Student List</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Mobile Number</th>
+            <th>Email</th>
+            <th>Profile Picture</th>
+            <th>Group</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.FullName</td>
+                <td>@student.MobileNumber</td>
+                <td>@student.Email</td>
+                <td><img src="@student.ProfilePic" alt="Profile Picture" width="50" height="50" /></td>
+                <td>@student.GroupId</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@student.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@student.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@student.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -5,6 +5,12 @@ using TasksEvaluation.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using TasksEvaluation.Areas.Identity.Data;
 using TasksEvaluation.Infrastructure.Helpers;
+using TasksEvaluation.Core.Entities.Business;
+using TasksEvaluation.Core.Interfaces.IRepositories;
+using TasksEvaluation.Core.Interfaces.IServices;
+using TasksEvaluation.Infrastructure.Services;
+using TasksEvaluation.Infrastructure.Repository;
+using TasksEvaluation.Core.Mapper;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +26,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConfig"));
 
 });
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Register StudentService as a scoped service
+builder.Services.AddScoped<IStudentService, StudentService>();
+
+// Register repositories
+builder.Services.AddScoped<IBaseRepository<Student>, BaseRepository<Student>>();  // Adjust based on actual repository implementation
+
+// Register mappers
+builder.Services.AddScoped<IBaseMapper<Student, StudentDTO>, BaseMapper<Student, StudentDTO>>();
+builder.Services.AddScoped<IBaseMapper<StudentDTO, Student>, BaseMapper<StudentDTO, Student>>();
 
 
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)

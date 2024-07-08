@@ -1,0 +1,48 @@
+﻿@model TasksEvaluation.Core.DTOs.StudentDTO
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<h2>Delete Student</h2>
+
+<h4>Student</h4>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.FullName)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.FullName)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.MobileNumber)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.MobileNumber)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Email)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Email)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.ProfilePic)
+    </dt>
+    <dd class="col-sm-10">
+        <img src="@Model.ProfilePic" alt="Profile Picture" width="100" height="100" />
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.GroupId)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.GroupId)
+    </dd>
+</dl>
+
+<form asp-action="DeleteConfirmed">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Delete" class="btn btn-danger" /> |
+    <a asp-action="Index">Back to List</a>
+</form>

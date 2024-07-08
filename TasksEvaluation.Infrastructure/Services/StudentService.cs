@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TasksEvaluation.Core.DTOs;
 using TasksEvaluation.Core.Entities.Business;
@@ -29,26 +27,46 @@ namespace TasksEvaluation.Infrastructure.Services
 
         public async Task<StudentDTO> Create(StudentDTO model)
         {
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
             var entity = _studentMapper.MapModel(model);
             entity.EntryDate = DateTime.Now;
-            return _studentDTOMapper.MapModel(await _studentRepository.Create(entity));
+            var createdEntity = await _studentRepository.Create(entity);
+            return _studentDTOMapper.MapModel(createdEntity);
         }
 
         public async Task Delete(int id)
         {
             var entity = await _studentRepository.GetById(id);
+            if (entity == null) throw new ArgumentNullException($"Student with ID {id} not found");
+
             await _studentRepository.Delete(entity);
         }
 
-        public async Task<StudentDTO> GetStudent(int id) => _studentDTOMapper.MapModel(await _studentRepository.GetById(id));
+        public async Task<StudentDTO> GetStudent(int id)
+        {
+            var entity = await _studentRepository.GetById(id);
+            if (entity == null) throw new ArgumentNullException($"Student with ID {id} not found");
 
-        public async Task<IEnumerable<StudentDTO>> GetStudents() => _studentDTOMapper.MapList(await _studentRepository.GetAll());
+            return _studentDTOMapper.MapModel(entity);
+        }
+
+        public async Task<IEnumerable<StudentDTO>> GetStudents()
+        {
+            var entities = await _studentRepository.GetAll();
+            return _studentDTOMapper.MapList(entities);
+        }
 
         public async Task Update(StudentDTO model)
         {
-            var existingData = _studentMapper.MapModel(model);
-            existingData.UpdateDate = DateTime.Now;
-            await _studentRepository.Update(existingData);
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var student = await _studentRepository.GetById(model.Id);
+            if (student == null) throw new ArgumentNullException($"Student with ID {model.Id} not found");
+
+            student = _studentMapper.MapModel(model);
+            student.UpdateDate = DateTime.Now;
+            await _studentRepository.Update(student);
         }
     }
 }
