@@ -4,6 +4,7 @@ using TasksEvaluation.Core.DTOs;
 using TasksEvaluation.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using TasksEvaluation.Areas.Identity.Data;
+using TasksEvaluation.Infrastructure.Helpers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +14,14 @@ builder.Services.AddControllersWithViews();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConfig"));
 
 });
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -45,9 +49,15 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapDefaultControllerRoute();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+//Seed Data In DataBase 
+DbInitializer.Seed(app);
+
 app.Run();
