@@ -11,6 +11,8 @@ using TasksEvaluation.Core.Interfaces.IServices;
 using TasksEvaluation.Infrastructure.Services;
 using TasksEvaluation.Infrastructure.Repository;
 using TasksEvaluation.Core.Mapper;
+using TasksEvaluation.Core.IRepositories;
+using TasksEvaluation.Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +41,7 @@ builder.Services.AddScoped<IBaseRepository<Student>, BaseRepository<Student>>();
 builder.Services.AddScoped<IBaseMapper<Student, StudentDTO>, BaseMapper<Student, StudentDTO>>();
 builder.Services.AddScoped<IBaseMapper<StudentDTO, Student>, BaseMapper<StudentDTO, Student>>();
 
-
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI()
