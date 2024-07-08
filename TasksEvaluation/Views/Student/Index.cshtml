@@ -4,38 +4,61 @@
     ViewData["Title"] = "Student List";
 }
 
+<link href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+<style>
+    .action-buttons a {
+        margin-right: 5px;
+    }
+
+        .action-buttons a .fa {
+            font-size: 14px; /* Adjust the size as needed */
+        }
+</style>
+
 <h2>Student List</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fa fa-plus"></i> Create New
+    </a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Full Name</th>
-            <th>Mobile Number</th>
-            <th>Email</th>
-            <th>Profile Picture</th>
-            <th>Group</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var student in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@student.FullName</td>
-                <td>@student.MobileNumber</td>
-                <td>@student.Email</td>
-                <td><img src="@student.ProfilePic" alt="Profile Picture" width="50" height="50" /></td>
-                <td>@student.GroupId</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@student.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@student.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@student.Id">Delete</a>
-                </td>
+                <th>Full Name</th>
+                <th>Mobile Number</th>
+                <th>Email</th>
+                <th>Profile Picture</th>
+                <th>Group</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.FullName</td>
+                    <td>@student.MobileNumber</td>
+                    <td>@student.Email</td>
+                    <td><img src="@student.ProfilePic" alt="Profile Picture" width="50" height="50" /></td>
+                    <td>@student.GroupId</td>
+                    <td class="action-buttons">
+                        <a asp-action="Edit" asp-route-id="@student.Id" class="btn btn-primary btn-xs">
+                            <i class="fa fa-pencil-alt"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@student.Id" class="btn btn-info btn-xs">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-danger btn-xs">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
