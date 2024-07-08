@@ -27,7 +27,7 @@ body {
     width: 250px;
     position: fixed;
     height: 100%;
-    background: #343a40;
+    background: #7c8184;
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
