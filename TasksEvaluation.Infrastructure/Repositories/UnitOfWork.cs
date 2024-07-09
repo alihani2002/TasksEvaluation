@@ -17,6 +17,7 @@ namespace TasksEvaluation.Infrastructure.Repositories
         public IBaseRepositories<ApplicationUser> ApplicationUsers => new BaseRepositories<ApplicationUser>(_context);
         public IBaseRepositories<Student> Students => new BaseRepositories<Student>(_context);
 
+        public IBaseRepositories<Assignment> Assignments => new BaseRepositories<Assignment>(_context);
 
         public int Complete()
         {

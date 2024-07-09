@@ -13,6 +13,7 @@ namespace TasksEvaluation.Core.IRepositories
     {
         public IBaseRepositories<ApplicationUser> ApplicationUsers { get; }
         public IBaseRepositories<Student> Students { get; }
+        public IBaseRepositories<Assignment> Assignments { get; }
 
         int Complete();
     }
