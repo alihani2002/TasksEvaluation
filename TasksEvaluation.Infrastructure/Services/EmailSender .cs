@@ -9,7 +9,7 @@ namespace TasksEvaluation.Infrastructure.Services
     {
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var fromMail = "alyhani2002@gmail.com";
+            var fromMail = "alihani3333@outlook.com";
             var fromPassword = "123123123Ali@";
 
             var message = new MailMessage();
@@ -19,14 +19,14 @@ namespace TasksEvaluation.Infrastructure.Services
             message.Body = $"<html><body>{htmlMessage}</body></html>";
             message.IsBodyHtml = true;
 
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+            var smtpClient = new SmtpClient("smtp-mail.outlook.com")
             {
                 Port = 587,
                 Credentials = new NetworkCredential(fromMail, fromPassword),
                 EnableSsl = true
             };
 
-            await smtpClient.SendMailAsync(message);
+            smtpClient.Send(message);
         }
     }
 }
