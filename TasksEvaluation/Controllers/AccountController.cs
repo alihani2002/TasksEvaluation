@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using TasksEvaluation.Areas.Identity.Data;
 using TasksEvaluation.Core.DTOs;
+using TasksEvaluation.Core.Interfaces.IServices;
 
 namespace TasksEvaluation.Controllers
 {
@@ -11,12 +13,17 @@ namespace TasksEvaluation.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
-
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+        private readonly IEmailSenders _emailSenders;
+        private readonly IEmailBodyBuilder _emailBodyBuilder;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            IMapper mapper, IEmailSenders emailSenders, IEmailBodyBuilder emailBodyBuilder)
         {
+
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _emailSenders = emailSenders;
+            _emailBodyBuilder = emailBodyBuilder;
         }
 
         [HttpGet]
@@ -27,7 +34,7 @@ namespace TasksEvaluation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register( RegisterDTO model)
+        public async Task<IActionResult> Register(RegisterDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -76,5 +83,95 @@ namespace TasksEvaluation.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    return RedirectToAction("ForgotPasswordConfirmation");
+                }
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { token, email = user.Email }, protocol: HttpContext.Request.Scheme);
+
+                var placeholders = new Dictionary<string, string>
+                {
+                    { "header", "Reset Your Password" },
+                    { "body", "Click the link below to reset your password." },
+                    { "url", callbackUrl },
+                    { "linkTitle", "Reset Password" }
+                };
+
+                var emailContent = _emailBodyBuilder.GetEmailBody("reset_password", placeholders);
+                await _emailSenders.SendEmailAsync(model.Email, "Reset Password", emailContent);
+
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string token = null)
+        {
+            if (token == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var model = new ResetPasswordDTO { Token = token };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
     }
 }
+

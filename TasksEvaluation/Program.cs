@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TasksEvaluation.Core.DTOs;
@@ -13,6 +15,7 @@ using TasksEvaluation.Infrastructure.Repository;
 using TasksEvaluation.Core.Mapper;
 using TasksEvaluation.Core.IRepositories;
 using TasksEvaluation.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +53,9 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.Si
 // Add Fluent Validation
 builder.Services.AddValidatorsFromAssembly(typeof(CourseDTO).Assembly);
 
+
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
