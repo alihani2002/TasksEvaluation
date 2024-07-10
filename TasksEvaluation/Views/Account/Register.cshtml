@@ -1,38 +1,58 @@
-﻿<!-- Views/Account/Register.cshtml -->
-@model TasksEvaluation.Core.DTOs.RegisterDTO
+﻿@model TasksEvaluation.Core.DTOs.RegisterDTO
 
 @{
     ViewData["Title"] = "Register";
 }
 
-<h2>Register</h2>
+<section class="bg-light p-3 p-md-4 p-xl-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-9 col-lg-7 col-xl-6 col-xxl-5">
+                <div class="card border border-light-subtle rounded-4">
+                    <div class="card-body p-3 p-md-4 p-xl-5">
+                        <div class="text-center mb-4">
+                            <a href="#!">
+                                <img src="~/img/logo.png" alt="Logo" class="img-fluid" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        <h2 class="text-center">Register</h2>
+                        <form asp-action="Register" method="post" class="mt-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Email" class="form-control" placeholder="Email" required />
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="FirstName" class="form-control" placeholder="First Name" required />
+                                <label asp-for="FirstName" class="form-label">First Name</label>
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="LastName" class="form-control" placeholder="Last Name" required />
+                                <label asp-for="LastName" class="form-label">Last Name</label>
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Password" required />
+                                <label asp-for="Password" class="form-label">Password</label>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" required />
+                                <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<form asp-action="Register" method="post">
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
-    </div>
-   
-    <div>
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" />
-        <span asp-validation-for="FirstName"></span>
-    </div>
-    <div>
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" />
-        <span asp-validation-for="LastName"></span>
-    </div>
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <div>
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" />
-        <span asp-validation-for="ConfirmPassword"></span>
-    </div>
-    <button type="submit">Register</button>
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
