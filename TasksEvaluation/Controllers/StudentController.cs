@@ -4,9 +4,12 @@ using TasksEvaluation.Infrastructure.Repositories;
 using AutoMapper;
 using TasksEvaluation.Core.Entities.Business;
 using TasksEvaluation.Core.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TasksEvaluation.Controllers
 {
+
+    [Authorize(Roles = "Admin")]
     public class StudentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

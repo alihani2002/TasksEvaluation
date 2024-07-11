@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TasksEvaluation.Core.DTOs;
 using TasksEvaluation.Core.Entities.Business;
@@ -6,6 +7,7 @@ using TasksEvaluation.Core.IRepositories;
 
 namespace TasksEvaluation.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AssignmentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
