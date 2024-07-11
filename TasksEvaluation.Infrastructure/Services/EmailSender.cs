@@ -18,7 +18,8 @@ namespace TasksEvaluation.Infrastructure.Services
             mailSettings = _mailSettings.Value;
             webHostEnvironment = _webHostEnvironment;
         }
-        public async Task SendEmailAsync(string email, string subject, string content)
+
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             if (string.IsNullOrEmpty(email))
                 return;
@@ -27,7 +28,7 @@ namespace TasksEvaluation.Infrastructure.Services
             message.From = new MailAddress(mailSettings.Email!, mailSettings.DisplayName);
             message.Subject = subject;
             message.To.Add(email);
-            message.Body = $"<html><body>{content}</body></html>";
+            message.Body = $"<html><body>{htmlMessage}</body></html>";
             message.IsBodyHtml = true;
 
 
