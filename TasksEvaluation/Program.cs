@@ -34,15 +34,24 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// Register StudentService as a scoped service
-builder.Services.AddScoped<IStudentService, StudentService>();
+//// Register StudentService as a scoped service
+//builder.Services.AddScoped<IStudentService, StudentService>();
+//builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 
-// Register repositories
-builder.Services.AddScoped<IBaseRepository<Student>, BaseRepository<Student>>();  // Adjust based on actual repository implementation
+
+//// Register repositories
+//builder.Services.AddScoped<IBaseRepository<Student>, BaseRepository<Student>>();  // Adjust based on actual repository implementation
+//builder.Services.AddScoped<IBaseRepository<Assignment>, BaseRepository<Assignment>>();
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+builder.Services.AddTransient<IAssignmentService, AssignmentService>();
 
 // Register mappers
 builder.Services.AddScoped<IBaseMapper<Student, StudentDTO>, BaseMapper<Student, StudentDTO>>();
 builder.Services.AddScoped<IBaseMapper<StudentDTO, Student>, BaseMapper<StudentDTO, Student>>();
+builder.Services.AddScoped<IBaseMapper<Assignment, AssignmentDTO>, BaseMapper<Assignment, AssignmentDTO>>();
+builder.Services.AddScoped<IBaseMapper<AssignmentDTO, Assignment>, BaseMapper<AssignmentDTO, Assignment>>();
+
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -54,6 +63,7 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.Si
 builder.Services.AddValidatorsFromAssembly(typeof(CourseDTO).Assembly);
 
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 

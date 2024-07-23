@@ -13,10 +13,21 @@ namespace TasksEvaluation.Infrastructure.Services
     {
         private readonly MailSettings mailSettings;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public EmailSender(IOptions<MailSettings> _mailSettings, IWebHostEnvironment _webHostEnvironment)
+
+        public EmailSender(IOptions<MailSettings> mailSettings, IWebHostEnvironment webHostEnvironment)
         {
-            mailSettings = _mailSettings.Value;
-            webHostEnvironment = _webHostEnvironment;
+            this.mailSettings = mailSettings?.Value ?? throw new ArgumentNullException(nameof(mailSettings));
+            this.webHostEnvironment = webHostEnvironment;
+
+            if (string.IsNullOrEmpty(this.mailSettings.Email))
+            {
+                throw new ArgumentException("Email is not configured in mail settings.");
+            }
+
+            if (string.IsNullOrEmpty(this.mailSettings.DisplayName))
+            {
+                throw new ArgumentException("DisplayName is not configured in mail settings.");
+            }
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -24,23 +35,24 @@ namespace TasksEvaluation.Infrastructure.Services
             if (string.IsNullOrEmpty(email))
                 return;
 
-            var message = new MailMessage();
-            message.From = new MailAddress(mailSettings.Email!, mailSettings.DisplayName);
-            message.Subject = subject;
-            message.To.Add(email);
-            message.Body = $"<html><body>{htmlMessage}</body></html>";
-            message.IsBodyHtml = true;
-
-
-            var smtpClient = new SmtpClient(mailSettings.Host)
+            var message = new MailMessage
             {
-                Port = mailSettings.Port,
+                From = new MailAddress(mailSettings.Email, mailSettings.DisplayName),
+                Subject = subject,
+                Body = $"<html><body>{htmlMessage}</body></html>",
+                IsBodyHtml = true
+            };
+            message.To.Add(email);
+
+            using var smtpClient = new SmtpClient(mailSettings.Host, mailSettings.Port)
+            {
                 Credentials = new NetworkCredential(mailSettings.Email, mailSettings.Password),
-                EnableSsl = true,
+                EnableSsl = true
             };
 
             await smtpClient.SendMailAsync(message);
-            smtpClient.Dispose();
         }
+
     }
+
 }
