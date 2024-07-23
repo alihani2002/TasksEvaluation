@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TasksEvaluation.Core.Entities.Business;
 using TasksEvaluation.Core.Interfaces.IRepositories;
 using TasksEvaluation.Infrastructure.Data;
 
@@ -12,6 +13,7 @@ namespace TasksEvaluation.Infrastructure.Repository
     {
         protected readonly ApplicationDbContext _dbContext;
         protected DbSet<T> DbSet => _dbContext.Set<T>();
+
 
         public BaseRepository(ApplicationDbContext dbContext)
         {
@@ -45,6 +47,12 @@ namespace TasksEvaluation.Infrastructure.Repository
         {
             DbSet.Update(model);
             await SaveChangesAsync();
+        }
+
+        public async Task<Student> GetByEmail(string email)
+        {
+            var data = await _dbContext.Students.FirstOrDefaultAsync(t => t.Email == email);
+            return data is null ? throw new InvalidOperationException("No data Found") : data;
         }
     }
 }

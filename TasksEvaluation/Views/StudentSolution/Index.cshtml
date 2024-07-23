@@ -1,0 +1,16 @@
+﻿@model TasksEvaluation.Core.Entities.Business.Student;
+
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+@if (ViewBag.Student != null)
+{
+    <h2>Welcome, @ViewBag.Student.FullName</h2>
+    <p>Email: @ViewBag.Student.Email</p>
+    <!-- Display other student information as needed -->
+}
+else
+{
+    <p>No student data available, Log In again</p>
+}
