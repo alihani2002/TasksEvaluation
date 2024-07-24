@@ -18,6 +18,7 @@ namespace TasksEvaluation.Core.Mapper
             CreateMap<Assignment, AssignmentDTO>().ReverseMap();
             CreateMap<RegisterDTO, ApplicationUser>().ReverseMap();
             CreateMap<SolutionDTO, Solution>().ReverseMap();
+            CreateMap<SolutionDTO, UploadSolutionDTO>().ReverseMap();
 
             // Add other mappings here
         }

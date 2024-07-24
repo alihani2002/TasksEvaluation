@@ -8,6 +8,7 @@ using TasksEvaluation.Core.DTOs;
 using TasksEvaluation.Core.Entities.Business;
 using TasksEvaluation.Core.Interfaces.IRepositories;
 using TasksEvaluation.Core.Interfaces.IServices;
+using TasksEvaluation.Core.IRepositories;
 using TasksEvaluation.Core.Mapper;
 
 namespace TasksEvaluation.Infrastructure.Services
@@ -16,8 +17,11 @@ namespace TasksEvaluation.Infrastructure.Services
     {
         private readonly IBaseMapper<Solution, SolutionDTO> _solutionDTOMapper;
         private readonly IBaseMapper<SolutionDTO, Solution> _solutionMapper;
+        private readonly IBaseMapper<UploadSolutionDTO, SolutionDTO> _UploadsolutionDTOMapper;
+        private readonly IBaseMapper<SolutionDTO, UploadSolutionDTO> _UploadsolutionMapper;
         private readonly IBaseRepository<Solution> _solutionRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUnitOfWork _unitOfWork;
 
         private List<string> _allowedFileExtensions = new() { ".pdf", ".docx" };
         private int _maxAllowedSizeFile = 5242880;
@@ -26,12 +30,20 @@ namespace TasksEvaluation.Infrastructure.Services
             IBaseMapper<Solution, SolutionDTO> solutionDTOMapper,
             IBaseMapper<SolutionDTO, Solution> solutionMapper,
             IBaseRepository<Solution> solutionRepository,
-          IWebHostEnvironment webHostEnvironment)
+          IWebHostEnvironment webHostEnvironment ,
+          IBaseMapper<UploadSolutionDTO, SolutionDTO> UploadsolutionDTOMapper,
+          IBaseMapper<SolutionDTO, UploadSolutionDTO> UploadsolutionMapper,
+          IUnitOfWork unitOfWork
+
+          )
         {
             _solutionDTOMapper = solutionDTOMapper;
             _solutionMapper = solutionMapper;
             _solutionRepository = solutionRepository;
             _webHostEnvironment = webHostEnvironment;
+            _UploadsolutionDTOMapper= UploadsolutionDTOMapper;
+            _UploadsolutionMapper = UploadsolutionMapper;
+            _unitOfWork=unitOfWork;
         }
 
         public async Task<SolutionDTO> Create(SolutionDTO model)
@@ -60,7 +72,7 @@ namespace TasksEvaluation.Infrastructure.Services
 
         public async Task<SolutionDTO> UploadSolution(UploadSolutionDTO model)
         {
-            var solution = _solutionDTOMapper.MapModel(await _solutionRepository.GetById(model.Id));
+            
             var extension = Path.GetExtension(model.SolutionFile.FileName);
 
             if (!_allowedFileExtensions.Contains(extension))
@@ -74,9 +86,13 @@ namespace TasksEvaluation.Infrastructure.Services
             var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/pdfs", fileName);
             using var stream = File.Create(path);
             model.SolutionFile.CopyTo(stream);
-
+            var solution = _UploadsolutionDTOMapper.MapModel(model);
             solution.SolutionFile = fileName;
-            return  solution;
+            var entity = _solutionMapper.MapModel(solution);
+            await _unitOfWork.Solutions.Add(entity);
+            _unitOfWork.Complete();
+            return _solutionDTOMapper.MapModel(entity);
+
         }
     }
 }

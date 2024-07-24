@@ -54,6 +54,8 @@ builder.Services.AddScoped<IBaseMapper<Assignment, AssignmentDTO>, BaseMapper<As
 builder.Services.AddScoped<IBaseMapper<AssignmentDTO, Assignment>, BaseMapper<AssignmentDTO, Assignment>>();
 builder.Services.AddScoped<IBaseMapper<Solution, SolutionDTO>, BaseMapper<Solution, SolutionDTO>>();
 builder.Services.AddScoped<IBaseMapper<SolutionDTO, Solution>, BaseMapper<SolutionDTO, Solution>>();
+builder.Services.AddScoped<IBaseMapper<UploadSolutionDTO, SolutionDTO>, BaseMapper<UploadSolutionDTO, SolutionDTO>>();
+builder.Services.AddScoped<IBaseMapper<SolutionDTO, UploadSolutionDTO>, BaseMapper<SolutionDTO, UploadSolutionDTO>>();
 
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -101,7 +101,7 @@ namespace TasksEvaluation.Controllers
                 if (!string.IsNullOrEmpty(result.Notes))
                 {
                     ModelState.AddModelError(string.Empty, result.Notes);
-                    return View(model);
+                    return RedirectToAction(nameof(Index));
                 }
 
                 return RedirectToAction(nameof(Index));
