@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TasksEvaluation.Core.DTOs;
@@ -43,8 +44,9 @@ namespace TasksEvaluation.Infrastructure.Services
         public async Task<AssignmentDTO> GetAssignment(int id) => _assignmentDTOMapper.MapModel(await _assignmentRepository.GetById(id));
 
         public async Task<IEnumerable<AssignmentDTO>> GetAssignments() => _assignmentDTOMapper.MapList(await _assignmentRepository.GetAll());
-
-        public async Task Update(AssignmentDTO model)
+        public async Task<IEnumerable<AssignmentDTO>> GetAssignmentsWhere(Expression<Func<Assignment, bool>> match) => _assignmentDTOMapper.MapList(await _assignmentRepository.GetAllWhere(match));
+    
+    public async Task Update(AssignmentDTO model)
         {
             var existingData = _assignmentMapper.MapModel(model);
             existingData.UpdateDate = DateTime.Now;

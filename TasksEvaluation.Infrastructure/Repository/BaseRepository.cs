@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TasksEvaluation.Core.Entities.Business;
 using TasksEvaluation.Core.Interfaces.IRepositories;
@@ -54,6 +55,9 @@ namespace TasksEvaluation.Infrastructure.Repository
             var data = await _dbContext.Students.FirstOrDefaultAsync(t => t.Email == email);
             return data is null ? throw new InvalidOperationException("No data Found") : data;
         }
+
+        public async Task<IEnumerable<T>> GetAllWhere(Expression<Func<T, bool>> match) => await DbSet.Where(match).AsNoTracking().ToListAsync();
+
     }
 }
 

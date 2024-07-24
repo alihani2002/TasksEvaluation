@@ -1,16 +1,42 @@
-﻿@model TasksEvaluation.Core.Entities.Business.Student;
+﻿@model List<TasksEvaluation.Core.DTOs.AssignmentDTO>
 
 @{
     ViewData["Title"] = "Student Dashboard";
+    var student = ViewBag.Student as TasksEvaluation.Core.Entities.Business.Student;
 }
 
-@if (ViewBag.Student != null)
+@if (student != null)
 {
-    <h2>Welcome, @ViewBag.Student.FullName</h2>
-    <p>Email: @ViewBag.Student.Email</p>
+    <h2>Welcome, @student.FullName</h2>
+    <p>Email: @student.Email</p>
     <!-- Display other student information as needed -->
+    @if (Model != null || Model.Any())
+    {
+        <h3>Your Assignments</h3>
+        <div class="row">
+            @foreach (var assignment in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">@assignment.Title</h5>
+                            <p class="card-text">@assignment.Description</p>
+                            <p class="card-text"><small class="text-muted">Deadline: @assignment.DeadLine.ToString("MM/dd/yyyy")</small></p>
+                            <a href="@Url.Action("UploadSolution", "StudentSolution", new { assignmentId = assignment.Id })" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Solution
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No assignments found for your group.</p>
+    }
 }
 else
 {
-    <p>No student data available, Log In again</p>
+    <p>No student data available. Please log in again.</p>
 }

@@ -14,5 +14,7 @@ namespace TasksEvaluation.Core.Interfaces.IServices
         Task<SolutionDTO> Create(SolutionDTO model);
         Task Update(SolutionDTO model);
         Task Delete(int id);
+
+        Task<SolutionDTO> UploadSolution(UploadSolutionDTO model);
     }
 }

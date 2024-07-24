@@ -45,12 +45,15 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddTransient<IAssignmentService, AssignmentService>();
+builder.Services.AddTransient<ISolutionService, SolutionService>();
 
 // Register mappers
 builder.Services.AddScoped<IBaseMapper<Student, StudentDTO>, BaseMapper<Student, StudentDTO>>();
 builder.Services.AddScoped<IBaseMapper<StudentDTO, Student>, BaseMapper<StudentDTO, Student>>();
 builder.Services.AddScoped<IBaseMapper<Assignment, AssignmentDTO>, BaseMapper<Assignment, AssignmentDTO>>();
 builder.Services.AddScoped<IBaseMapper<AssignmentDTO, Assignment>, BaseMapper<AssignmentDTO, Assignment>>();
+builder.Services.AddScoped<IBaseMapper<Solution, SolutionDTO>, BaseMapper<Solution, SolutionDTO>>();
+builder.Services.AddScoped<IBaseMapper<SolutionDTO, Solution>, BaseMapper<SolutionDTO, Solution>>();
 
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -61,7 +64,13 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.Si
 
 // Add Fluent Validation
 builder.Services.AddValidatorsFromAssembly(typeof(CourseDTO).Assembly);
-
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
@@ -81,7 +90,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthorization();
 
 

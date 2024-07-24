@@ -44,4 +44,8 @@
     <None Include="Views\Account\ForgotPassword.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\pdfs\" />
+  </ItemGroup>
+
 </Project>

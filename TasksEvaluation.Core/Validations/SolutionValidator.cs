@@ -8,9 +8,9 @@ namespace TaskEvaluation.Web.EntityConfigs
     {
         public SolutionValidator()
         {
-            RuleFor(s => Path.GetExtension(s.SolutionFile))
-                .Matches(@"^(.png|.jpg|.jpeg|.zip|.pdf)")
-                .WithMessage("Solution file must end with .png|.jpg|.jpeg|.zip|.pdf"); ;
+            //RuleFor(s => Path.GetExtension(s.SolutionFile))
+            //    .Matches(@"^(.png|.jpg|.jpeg|.zip|.pdf)")
+            //    .WithMessage("Solution file must end with .png|.jpg|.jpeg|.zip|.pdf"); ;
             
         }
     }

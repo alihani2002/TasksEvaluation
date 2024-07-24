@@ -11,4 +11,5 @@ namespace TasksEvaluation.Core.Mapper
         TDestination MapModel(TSource source);
         IEnumerable<TDestination> MapList(IEnumerable<TSource> source);
     }
+
 }
