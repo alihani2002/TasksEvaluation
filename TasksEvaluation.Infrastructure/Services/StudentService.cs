@@ -48,8 +48,7 @@ public class StudentService : IStudentService
 
     public async Task Update(StudentDTO model)
     {
-        var entity = await _studentRepository.GetById(model.Id);
-        _studentMapper.MapModel(model);
+        var entity = _studentMapper.MapModel(model);
         entity.UpdateDate = DateTime.Now;
         await _studentRepository.Update(entity);
     }
