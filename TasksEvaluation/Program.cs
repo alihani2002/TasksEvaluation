@@ -32,20 +32,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 });
 
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-//// Register StudentService as a scoped service
-//builder.Services.AddScoped<IStudentService, StudentService>();
-//builder.Services.AddScoped<IAssignmentService, AssignmentService>();
-
-
-//// Register repositories
-//builder.Services.AddScoped<IBaseRepository<Student>, BaseRepository<Student>>();  // Adjust based on actual repository implementation
-//builder.Services.AddScoped<IBaseRepository<Assignment>, BaseRepository<Assignment>>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-
 builder.Services.AddTransient<IAssignmentService, AssignmentService>();
 builder.Services.AddTransient<ISolutionService, SolutionService>();
+builder.Services.AddTransient<IStudentService, StudentService>();
+
 
 // Register mappers
 builder.Services.AddScoped<IBaseMapper<Student, StudentDTO>, BaseMapper<Student, StudentDTO>>();
@@ -56,7 +49,6 @@ builder.Services.AddScoped<IBaseMapper<Solution, SolutionDTO>, BaseMapper<Soluti
 builder.Services.AddScoped<IBaseMapper<SolutionDTO, Solution>, BaseMapper<SolutionDTO, Solution>>();
 builder.Services.AddScoped<IBaseMapper<UploadSolutionDTO, SolutionDTO>, BaseMapper<UploadSolutionDTO, SolutionDTO>>();
 builder.Services.AddScoped<IBaseMapper<SolutionDTO, UploadSolutionDTO>, BaseMapper<SolutionDTO, UploadSolutionDTO>>();
-
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)

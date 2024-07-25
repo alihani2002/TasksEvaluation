@@ -1,30 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TasksEvaluation.Core.DTOs;
-using TasksEvaluation.Infrastructure.Repositories;
+using TasksEvaluation.Core.Interfaces.IServices;
 using AutoMapper;
-using TasksEvaluation.Core.Entities.Business;
-using TasksEvaluation.Core.IRepositories;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace TasksEvaluation.Controllers
 {
-
     [Authorize(Roles = "Admin")]
     public class StudentController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IStudentService _studentService;
         private readonly IMapper _mapper;
 
-        public StudentController(IUnitOfWork unitOfWork, IMapper mapper)
+        public StudentController(IStudentService studentService, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _studentService = studentService;
             _mapper = mapper;
         }
 
         // GET: Student
         public async Task<IActionResult> Index()
         {
-            var students = await _unitOfWork.Students.GetAll();
+            var students = await _studentService.GetStudents();
             var studentDTOs = _mapper.Map<List<StudentDTO>>(students);
             return View(studentDTOs);
         }
@@ -32,13 +31,12 @@ namespace TasksEvaluation.Controllers
         // GET: Student/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var student = await _unitOfWork.Students.GetById(id);
+            var student = await _studentService.GetStudent(id);
             if (student == null)
             {
                 return NotFound();
             }
-            var studentDTO = _mapper.Map<StudentDTO>(student);
-            return View(studentDTO);
+            return View(student);
         }
 
         // GET: Student/Create
@@ -54,9 +52,7 @@ namespace TasksEvaluation.Controllers
         {
             if (ModelState.IsValid)
             {
-                var student = _mapper.Map<Student>(studentDTO);
-                await _unitOfWork.Students.Add(student);
-                _unitOfWork.Complete();
+                await _studentService.Create(studentDTO);
                 return RedirectToAction(nameof(Index));
             }
             return View(studentDTO);
@@ -65,13 +61,12 @@ namespace TasksEvaluation.Controllers
         // GET: Student/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var student = await _unitOfWork.Students.GetById(id);
+            var student = await _studentService.GetStudent(id);
             if (student == null)
             {
                 return NotFound();
             }
-            var studentDTO = _mapper.Map<StudentDTO>(student);
-            return View(studentDTO);
+            return View(student);
         }
 
         // POST: Student/Edit/5
@@ -88,15 +83,7 @@ namespace TasksEvaluation.Controllers
             {
                 try
                 {
-                    var student = await _unitOfWork.Students.GetById(id);
-                    if (student == null)
-                    {
-                        return NotFound();
-                    }
-
-                    _mapper.Map(studentDTO, student);
-                    _unitOfWork.Students.Update(student);
-                    _unitOfWork.Complete();
+                    await _studentService.Update(studentDTO);
                 }
                 catch (Exception)
                 {
@@ -110,13 +97,12 @@ namespace TasksEvaluation.Controllers
         // GET: Student/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var student = await _unitOfWork.Students.GetById(id);
+            var student = await _studentService.GetStudent(id);
             if (student == null)
             {
                 return NotFound();
             }
-            var studentDTO = _mapper.Map<StudentDTO>(student);
-            return View(studentDTO);
+            return View(student);
         }
 
         // POST: Student/Delete/5
@@ -124,14 +110,7 @@ namespace TasksEvaluation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _unitOfWork.Students.GetById(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            _unitOfWork.Students.Remove(student);
-            _unitOfWork.Complete();
+            await _studentService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }

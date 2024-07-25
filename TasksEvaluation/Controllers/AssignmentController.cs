@@ -2,40 +2,37 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TasksEvaluation.Core.DTOs;
-using TasksEvaluation.Core.Entities.Business;
-using TasksEvaluation.Core.IRepositories;
+using TasksEvaluation.Core.Interfaces.IServices;
 
 namespace TasksEvaluation.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class AssignmentController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAssignmentService _assignmentService;
         private readonly IMapper _mapper;
 
-        public AssignmentController(IUnitOfWork unitOfWork, IMapper mapper)
+        public AssignmentController(IAssignmentService assignmentService, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _assignmentService = assignmentService;
             _mapper = mapper;
         }
 
         // GET: Assignment
         public async Task<IActionResult> Index()
         {
-            var assignments = await _unitOfWork.Assignments.GetAll();
-            var assignmentDTOs = _mapper.Map<List<AssignmentDTO>>(assignments);
+            var assignmentDTOs = await _assignmentService.GetAssignments();
             return View(assignmentDTOs);
         }
 
         // GET: Assignment/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var assignment = await _unitOfWork.Assignments.GetById(id);
-            if (assignment == null)
+            var assignmentDTO = await _assignmentService.GetAssignment(id);
+            if (assignmentDTO == null)
             {
                 return NotFound();
             }
-            var assignmentDTO = _mapper.Map<AssignmentDTO>(assignment);
             return View(assignmentDTO);
         }
 
@@ -45,30 +42,37 @@ namespace TasksEvaluation.Controllers
             return View();
         }
 
-        // POST: Assignment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,DeadLine")] AssignmentDTO assignmentDTO)
+        public async Task<IActionResult> Create(AssignmentDTO assignmentDTO)
         {
             if (ModelState.IsValid)
             {
-                var assignment = _mapper.Map<Assignment>(assignmentDTO);
-                await _unitOfWork.Assignments.Add(assignment);
-                _unitOfWork.Complete();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _assignmentService.Create(assignmentDTO);
+                    TempData["SuccessMessage"] = "Assignment created successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    ModelState.AddModelError("", $"An error occurred while creating the assignment: {ex.Message}");
+                }
             }
             return View(assignmentDTO);
         }
 
+
+
         // GET: Assignment/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var assignment = await _unitOfWork.Assignments.GetById(id);
-            if (assignment == null)
+            var assignmentDTO = await _assignmentService.GetAssignment(id);
+            if (assignmentDTO == null)
             {
                 return NotFound();
             }
-            var assignmentDTO = _mapper.Map<AssignmentDTO>(assignment);
             return View(assignmentDTO);
         }
 
@@ -86,15 +90,7 @@ namespace TasksEvaluation.Controllers
             {
                 try
                 {
-                    var assignment = await _unitOfWork.Assignments.GetById(id);
-                    if (assignment == null)
-                    {
-                        return NotFound();
-                    }
-
-                    _mapper.Map(assignmentDTO, assignment);
-                    _unitOfWork.Assignments.Update(assignment);
-                    _unitOfWork.Complete();
+                    await _assignmentService.Update(assignmentDTO);
                 }
                 catch (Exception)
                 {
@@ -108,12 +104,11 @@ namespace TasksEvaluation.Controllers
         // GET: Assignment/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var assignment = await _unitOfWork.Assignments.GetById(id);
-            if (assignment == null)
+            var assignmentDTO = await _assignmentService.GetAssignment(id);
+            if (assignmentDTO == null)
             {
                 return NotFound();
             }
-            var assignmentDTO = _mapper.Map<AssignmentDTO>(assignment);
             return View(assignmentDTO);
         }
 
@@ -122,14 +117,7 @@ namespace TasksEvaluation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var assignment = await _unitOfWork.Assignments.GetById(id);
-            if (assignment == null)
-            {
-                return NotFound();
-            }
-
-            _unitOfWork.Assignments.Remove(assignment);
-            _unitOfWork.Complete();
+            await _assignmentService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }
