@@ -41,23 +41,16 @@ namespace TasksEvaluation.Infrastructure.Services
             await _assignmentRepository.Delete(entity);
         }
 
-        public async Task<AssignmentDTO> GetAssignment(int id)
-            => _assignmentDTOMapper.MapModel(await _assignmentRepository.GetById(id));
+        public async Task<AssignmentDTO> GetAssignment(int id) => _assignmentDTOMapper.MapModel(await _assignmentRepository.GetById(id));
 
-        public async Task<IEnumerable<AssignmentDTO>> GetAssignments()
-            => _assignmentDTOMapper.MapList(await _assignmentRepository.GetAll());
-
-        public async Task<IEnumerable<AssignmentDTO>> GetAssignmentsWhere(Expression<Func<Assignment, bool>> match)
-            => _assignmentDTOMapper.MapList(await _assignmentRepository.GetAllWhere(match));
+        public async Task<IEnumerable<AssignmentDTO>> GetAssignments() => _assignmentDTOMapper.MapList(await _assignmentRepository.GetAll());
+        public async Task<IEnumerable<AssignmentDTO>> GetAssignmentsWhere(Expression<Func<Assignment, bool>> match) => _assignmentDTOMapper.MapList(await _assignmentRepository.GetAllWhere(match));
 
         public async Task Update(AssignmentDTO model)
         {
-            var entity = await _assignmentRepository.GetById(model.Id);
-            if (entity == null) throw new InvalidOperationException("Assignment not found");
-
-            entity = _assignmentMapper.MapModel(model);
-            entity.UpdateDate = DateTime.Now;
-            await _assignmentRepository.Update(entity);
+            var existingData = _assignmentMapper.MapModel(model);
+            existingData.UpdateDate = DateTime.Now;
+            await _assignmentRepository.Update(existingData);
         }
     }
 }
