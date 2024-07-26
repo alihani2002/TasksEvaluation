@@ -1,12 +1,12 @@
-﻿@model SolutionDTO
+﻿@model TasksEvaluation.Core.DTOs.SolutionDTO
 
 @{
-    ViewData["Title"] = "Upload Solution";
+    ViewData["Title"] = "Edit Solution";
 }
 
-<h2>Upload Solution</h2>
+<h2>Edit Solution</h2>
 
-<form asp-action="UploadSolution" asp-controller="StudentSolution" method="post" enctype="multipart/form-data">
+<form asp-action="EditSolution" asp-controller="StudentSolution" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="SolutionFile" class="control-label"></label>
         <input asp-for="SolutionFile" class="form-control" type="file" />
@@ -17,7 +17,8 @@
         <input asp-for="Notes" class="form-control" />
         <span asp-validation-for="Notes" class="text-danger"></span>
     </div>
+    <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="AssignmentId" />
     <input type="hidden" asp-for="StudentId" />
-    <button type="submit" class="btn btn-primary">Upload</button>
+    <button type="submit" class="btn btn-primary">Update</button>
 </form>

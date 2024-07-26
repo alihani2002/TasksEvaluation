@@ -12,9 +12,9 @@ namespace TasksEvaluation.Core.Interfaces.IServices
         Task<IEnumerable<SolutionDTO>> GetSolutions();
         Task<SolutionDTO> GetSolution(int id);
         Task<SolutionDTO> Create(SolutionDTO model);
-        Task Update(SolutionDTO model);
-        Task Delete(int id);
-
+        Task<SolutionDTO> Update(UploadSolutionDTO model);
+        Task DeleteSolution(int id);
+        Task<SolutionDTO> GetSolution(int assignmentId, int studentId);
         Task<SolutionDTO> UploadSolution(UploadSolutionDTO model);
     }
 }

@@ -53,21 +53,69 @@ namespace TasksEvaluation.Infrastructure.Services
             return _solutionDTOMapper.MapModel(await _solutionRepository.Create(entity));
         }
 
-        public async Task Delete(int id)
-        {
-            var entity = await _solutionRepository.GetById(id);
-            await _solutionRepository.Delete(entity);
-        }
 
         public async Task<SolutionDTO> GetSolution(int id) => _solutionDTOMapper.MapModel(await _solutionRepository.GetById(id));
 
         public async Task<IEnumerable<SolutionDTO>> GetSolutions() => _solutionDTOMapper.MapList(await _solutionRepository.GetAll());
 
-        public async Task Update(SolutionDTO model)
+        public async Task<SolutionDTO> Update(UploadSolutionDTO model)
         {
-            var existingData = _solutionMapper.MapModel(model);
+            var existingData = await _solutionRepository.GetById(model.Id);
+            if (existingData == null)
+            {
+                return new SolutionDTO { Notes = "Solution not found!" };
+            }
+
+            existingData.Notes = model.Notes;
             existingData.UpdateDate = DateTime.Now;
+
+            if (model.SolutionFile != null)
+            {
+                var extension = Path.GetExtension(model.SolutionFile.FileName);
+
+                if (!_allowedFileExtensions.Contains(extension))
+                {
+                    return new SolutionDTO { Notes = "Only .pdf, .docx files are allowed!" };
+                }
+
+                if (model.SolutionFile.Length > _maxAllowedSizeFile)
+                {
+                    return new SolutionDTO { Notes = "File cannot be more than 5 MB!" };
+                }
+
+                var fileName = $"{Guid.NewGuid()}{extension}";
+                var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/pdfs", fileName);
+
+                using var stream = File.Create(path);
+                model.SolutionFile.CopyTo(stream);
+
+                // Delete the old file
+                var oldFilePath = Path.Combine($"{_webHostEnvironment.WebRootPath}/pdfs", existingData.SolutionFile);
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+
+                existingData.SolutionFile = fileName;
+            }
+
             await _solutionRepository.Update(existingData);
+            return _solutionDTOMapper.MapModel(existingData);
+        }
+
+        public async Task DeleteSolution(int id)
+        {
+            var entity = await _solutionRepository.GetById(id);
+            if (entity != null)
+            {
+                var filePath = Path.Combine($"{_webHostEnvironment.WebRootPath}/pdfs", entity.SolutionFile);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                await _solutionRepository.Delete(entity);
+            }
         }
 
         public async Task<SolutionDTO> UploadSolution(UploadSolutionDTO model)
@@ -94,5 +142,16 @@ namespace TasksEvaluation.Infrastructure.Services
             return _solutionDTOMapper.MapModel(entity);
 
         }
+
+
+
+        public async Task<SolutionDTO> GetSolution(int assignmentId, int studentId)
+        {
+            var solutions = await _solutionRepository.GetAll(); // Ensure this fetches all solutions or use a more optimized query
+            var sol= solutions.FirstOrDefault(s => s.AssignmentId == assignmentId && s.StudentId == studentId);
+            return _solutionDTOMapper.MapModel(sol);
+        }
+
+        
     }
 }
