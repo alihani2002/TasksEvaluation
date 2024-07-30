@@ -3,21 +3,25 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TasksEvaluation.Areas.Identity.Data;
 using TasksEvaluation.Core.DTOs;
+using TasksEvaluation.Core.Entities.Business;
 
 namespace TasksEvaluation.Controllers
 {
+
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IMapper mapper)
-        {
+        private readonly RoleManager<IdentityRole> _roleManager;
 
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            IMapper mapper, RoleManager<IdentityRole> roleManager)
+        {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -32,11 +36,20 @@ namespace TasksEvaluation.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if the Admin role exists, if not, create it
+                if (!await _roleManager.RoleExistsAsync(RoleName.roleAdmin))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(RoleName.roleAdmin));
+                }
+
                 var user = _mapper.Map<ApplicationUser>(model);
                 user.UserName = model.Email;
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    // Assign the user to the Admin role
+                    await _userManager.AddToRoleAsync(user, RoleName.roleAdmin);
+
                     // Redirect to login page instead of signing in the user
                     return RedirectToAction("Index", "Home");
                 }
@@ -77,6 +90,7 @@ namespace TasksEvaluation.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
 
         //[HttpGet]
         //public IActionResult ForgotPassword()
