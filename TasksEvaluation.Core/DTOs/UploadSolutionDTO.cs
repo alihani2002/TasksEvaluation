@@ -13,5 +13,6 @@ namespace TasksEvaluation.Core.DTOs
         public string Notes { get; set; }
         public int? StudentId { get; set; }
         public int? AssignmentId { get; set; }
+        public int? GradeId { get; set; }
     }
 }

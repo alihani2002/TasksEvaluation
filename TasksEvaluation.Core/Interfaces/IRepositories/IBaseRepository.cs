@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using TasksEvaluation.Core.consts;
 using TasksEvaluation.Core.Entities.Business;
 
 namespace TasksEvaluation.Core.Interfaces.IRepositories
@@ -18,5 +20,16 @@ namespace TasksEvaluation.Core.Interfaces.IRepositories
         Task Delete(T model);
         Task SaveChangesAsync();
         Task<Student> GetByEmail(string email);
+        Task<T?> Find(Expression<Func<T, bool>> predicate);
+        Task<T?> Find(Expression<Func<T, bool>> predicate, string[]? includes = null);
+        Task<T?> Find(Expression<Func<T, bool>> predicate,
+                Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null);
+        
+        Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null,
+            Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending);
+        Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate,
+            Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending);
+        Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending);
     }
 }

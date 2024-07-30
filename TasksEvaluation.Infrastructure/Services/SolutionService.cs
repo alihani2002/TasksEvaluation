@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,8 +56,57 @@ namespace TasksEvaluation.Infrastructure.Services
 
 
         public async Task<SolutionDTO> GetSolution(int id) => _solutionDTOMapper.MapModel(await _solutionRepository.GetById(id));
+        public async Task<SolutionStudentDTO> GetSolutionWithStudent(int id) {
 
+           var sol= await _solutionRepository.Find(s => s.Id == id, include: source => source.Include(s => s.Student).Include(s => s.Assignment));
+            var  solution = new SolutionStudentDTO
+            {
+                Id = sol.Id,
+                SolutionFile = sol.SolutionFile,
+                Notes = sol.Notes,
+                StudentId = sol.StudentId,
+                AssignmentId = sol.AssignmentId,
+                GradeId = sol.GradeId,
+                StudentName = sol.Student?.FullName, // Mapping Student's name
+                AssignmentTitle = sol.Assignment?.Title // Mapping Assignment's title
+            };
+            return solution;
+        } 
         public async Task<IEnumerable<SolutionDTO>> GetSolutions() => _solutionDTOMapper.MapList(await _solutionRepository.GetAll());
+        public async Task<IEnumerable<SolutionStudentDTO>> GetStudenSolutions()
+        {
+            var solutions = await _solutionRepository.FindAll(s => s.Id > 0, include: source => source.Include(s => s.Student).Include(s => s.Assignment));
+            return solutions.Select(solution => new SolutionStudentDTO
+            {
+                Id = solution.Id,
+                SolutionFile = solution.SolutionFile,
+                Notes = solution.Notes,
+                StudentId = solution.StudentId,
+                AssignmentId = solution.AssignmentId,
+                GradeId = solution.GradeId,
+                StudentName = solution.Student?.FullName, // Mapping Student's name
+                AssignmentTitle = solution.Assignment?.Title // Mapping Assignment's title
+            }).ToList();
+        }
+        public async Task Update(SolutionDTO model)
+        {
+            // Retrieve the existing entity from the repository
+            var existingEntity = await _solutionRepository.GetById(model.Id);
+
+            if (existingEntity == null)
+            {
+                throw new InvalidOperationException("Solution not found.");
+            }
+
+            // Manually update the properties of the existing entity
+            existingEntity.Notes = model.Notes;
+            existingEntity.GradeId = model.GradeId;
+
+            // Perform other property updates as needed
+
+            // Update the entity in the repository
+            await _solutionRepository.Update(existingEntity);
+        }
 
         public async Task<SolutionDTO> Update(UploadSolutionDTO model)
         {
@@ -151,6 +201,7 @@ namespace TasksEvaluation.Infrastructure.Services
             var sol= solutions.FirstOrDefault(s => s.AssignmentId == assignmentId && s.StudentId == studentId);
             return _solutionDTOMapper.MapModel(sol);
         }
+
 
         
     }

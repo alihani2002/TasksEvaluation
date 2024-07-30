@@ -38,6 +38,7 @@ builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddTransient<IAssignmentService, AssignmentService>();
 builder.Services.AddTransient<ISolutionService, SolutionService>();
 builder.Services.AddTransient<IStudentService, StudentService>();
+builder.Services.AddTransient<IGradeService, GradeService>();
 
 
 // Register mappers

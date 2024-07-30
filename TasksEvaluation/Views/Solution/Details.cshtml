@@ -1,0 +1,41 @@
+﻿@using TasksEvaluation.Core.Entities.Business
+@model SolutionStudentDTO
+
+<div class="container mt-4">
+    <h2>Solution Details</h2>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>Notes:</strong></label>
+        <p>@Model.Notes</p>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>Submitted by:</strong></label>
+        <p>@Model.StudentName</p>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>Assignment:</strong></label>
+        <p>@Model.AssignmentTitle</p>
+    </div>
+
+    <div class="mb-3">
+        <a href="@Url.Content("~/pdfs/" + Model.SolutionFile)" class="btn btn-info" target="_blank">
+            View Solution
+        </a>
+    </div>
+
+    <h3>Grade</h3>
+    <form asp-action="GradeSolution" method="post">
+        <input type="hidden" name="solutionId" value="@Model.Id" />
+        <div class="mb-3">
+            <select name="gradeId" class="form-select">
+                @foreach (var grade in (List<EvaluationGrade>)ViewBag.Grades)
+                {
+                    <option value="@grade.Id">@grade.Grade</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Grade</button>
+    </form>
+</div>
