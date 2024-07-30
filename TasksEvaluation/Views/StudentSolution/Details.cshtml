@@ -13,8 +13,11 @@
         <h5 class="card-title">@Model.Title</h5>
         <p class="card-text">@Model.Description</p>
         <p class="card-text"><small class="text-muted">Deadline: @Model.DeadLine.ToString("MM/dd/yyyy")</small></p>
-        
-        @if (solution != null)
+        @if (Model.DeadLine <= DateTime.Now)
+        {
+            <p>Time Finished for Submit</p>
+        }
+        else if (solution != null)
         {
             <p>Solution Uploaded: @solution.EntryDate.ToString()</p>
             <a href="@Url.Action("EditSolution", "StudentSolution", new { id = solution.Id })" class="btn btn-warning">
