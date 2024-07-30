@@ -42,6 +42,7 @@ namespace TasksEvaluation.Controllers
             return View();
         }
 
+        // POST: Assignment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AssignmentDTO assignmentDTO)
@@ -65,6 +66,7 @@ namespace TasksEvaluation.Controllers
 
 
 
+
         // GET: Assignment/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
@@ -79,7 +81,7 @@ namespace TasksEvaluation.Controllers
         // POST: Assignment/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,DeadLine")] AssignmentDTO assignmentDTO)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,DeadLine,GroupId")] AssignmentDTO assignmentDTO)
         {
             if (id != assignmentDTO.Id)
             {
@@ -101,7 +103,7 @@ namespace TasksEvaluation.Controllers
             return View(assignmentDTO);
         }
 
-      
+
 
         // GET: Assignment/Delete/5
         public async Task<IActionResult> Delete(int id)

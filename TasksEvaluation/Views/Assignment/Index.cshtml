@@ -32,6 +32,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Deadline</th>
+                <th>Group ID</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -42,6 +43,7 @@
                     <td>@assignment.Title</td>
                     <td>@assignment.Description</td>
                     <td>@assignment.DeadLine.ToString("yyyy-MM-dd")</td>
+                    <td>@assignment.GroupId</td>
                     <td class="action-buttons">
                         <a asp-action="Edit" asp-route-id="@assignment.Id" class="btn btn-primary btn-xs">
                             <i class="fa fa-pencil-alt"></i>
@@ -56,5 +58,6 @@
                 </tr>
             }
         </tbody>
+
     </table>
 </div>

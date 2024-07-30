@@ -41,6 +41,12 @@
                                 <span asp-validation-for="DeadLine" class="text-danger"></span>
                             </div>
                             <div class="col-12">
+                                <label asp-for="GroupId" class="form-label">Group ID</label>
+                                <input asp-for="GroupId" class="form-control" placeholder="Group ID" />
+                                <span asp-validation-for="GroupId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
                                 <div class="d-grid">
                                     <button type="submit" class="btn bsb-btn-xl btn-primary">Save</button>
                                 </div>
