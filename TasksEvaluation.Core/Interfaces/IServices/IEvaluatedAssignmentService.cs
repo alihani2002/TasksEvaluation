@@ -16,5 +16,6 @@ namespace TasksEvaluation.Core.Interfaces.IServices
         Task<AssignmentDTO> GetAssignment(int id);
         Task<IEnumerable<AssignmentDTO>> GetAssignmentsWithsolutions(int studentId);
         Task<IEnumerable<SolutionStudentDTO>> GetEvaluatedSolutions(int studentId);
+        Task<SolutionStudentDTO> GetSolutionWithGrade(int assignmentId, int studentId);
     }
 }

@@ -75,6 +75,35 @@ namespace TasksEvaluation.Infrastructure.Services
             }).ToList();
         }
 
-        
+        public async Task<SolutionStudentDTO> GetSolutionWithGrade(int assignmentId, int studentId)
+        {
+            var solutions = await _solutionRepository.GetAll(); // Ensure this fetches all solutions or use a more optimized query
+            var sol = solutions.FirstOrDefault(s => s.AssignmentId == assignmentId && s.StudentId == studentId);
+
+            if (sol == null)
+            {
+                return null;
+            }
+
+            var solution = await _solutionRepository.Find(s => s.Id == sol.Id, include: source => source.Include(s => s.Student).Include(s => s.Assignment).Include(s => s.Grade));
+            if (solution == null)
+            {
+                return null;
+            }
+
+            return new SolutionStudentDTO
+            {
+                Id = solution.Id,
+                SolutionFile = solution.SolutionFile,
+                Notes = solution.Notes,
+                StudentId = solution.StudentId,
+                AssignmentId = solution.AssignmentId,
+                GradeId = solution.GradeId,
+                StudentName = solution.Student?.FullName ?? "Unknown", // Mapping Student's name with null check
+                AssignmentTitle = solution.Assignment?.Title ?? "Untitled", // Mapping Assignment's title with null check
+                GardeName = solution.Grade?.Grade ?? "Not Graded", // Mapping Grade's name with null check
+            };
+        }
+
     }
 }
