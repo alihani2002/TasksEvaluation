@@ -19,6 +19,8 @@ namespace TasksEvaluation.Core.DTOs
         // New properties for displaying related data
         public string StudentName { get; set; }
         public string AssignmentTitle { get; set; }
+        public string GardeName { get; set; }
+
     }
 
 }

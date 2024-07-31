@@ -58,7 +58,7 @@ namespace TasksEvaluation.Infrastructure.Services
         public async Task<SolutionDTO> GetSolution(int id) => _solutionDTOMapper.MapModel(await _solutionRepository.GetById(id));
         public async Task<SolutionStudentDTO> GetSolutionWithStudent(int id) {
 
-           var sol= await _solutionRepository.Find(s => s.Id == id, include: source => source.Include(s => s.Student).Include(s => s.Assignment));
+           var sol= await _solutionRepository.Find(s => s.Id == id, include: source => source.Include(s => s.Student).Include(s => s.Assignment).Include(s => s.Grade));
             var  solution = new SolutionStudentDTO
             {
                 Id = sol.Id,
@@ -68,14 +68,17 @@ namespace TasksEvaluation.Infrastructure.Services
                 AssignmentId = sol.AssignmentId,
                 GradeId = sol.GradeId,
                 StudentName = sol.Student?.FullName, // Mapping Student's name
-                AssignmentTitle = sol.Assignment?.Title // Mapping Assignment's title
+                AssignmentTitle = sol.Assignment?.Title , // Mapping Assignment's title
+                GardeName = sol.Grade?.Grade
+
+
             };
             return solution;
         } 
         public async Task<IEnumerable<SolutionDTO>> GetSolutions() => _solutionDTOMapper.MapList(await _solutionRepository.GetAll());
         public async Task<IEnumerable<SolutionStudentDTO>> GetStudenSolutions()
         {
-            var solutions = await _solutionRepository.FindAll(s => s.Id > 0, include: source => source.Include(s => s.Student).Include(s => s.Assignment));
+            var solutions = await _solutionRepository.FindAll(s => s.Id > 0, include: source => source.Include(s => s.Student).Include(s => s.Assignment).Include(s => s.Grade));
             return solutions.Select(solution => new SolutionStudentDTO
             {
                 Id = solution.Id,
@@ -85,7 +88,9 @@ namespace TasksEvaluation.Infrastructure.Services
                 AssignmentId = solution.AssignmentId,
                 GradeId = solution.GradeId,
                 StudentName = solution.Student?.FullName, // Mapping Student's name
-                AssignmentTitle = solution.Assignment?.Title // Mapping Assignment's title
+                AssignmentTitle = solution.Assignment?.Title , // Mapping Assignment's title
+                GardeName = solution.Grade?.Grade
+
             }).ToList();
         }
         public async Task Update(SolutionDTO model)
@@ -195,14 +200,25 @@ namespace TasksEvaluation.Infrastructure.Services
 
 
 
-        public async Task<SolutionDTO> GetSolution(int assignmentId, int studentId)
+        public async Task<SolutionStudentDTO> GetSolution(int assignmentId, int studentId)
         {
-            var solutions = await _solutionRepository.GetAll(); // Ensure this fetches all solutions or use a more optimized query
-            var sol= solutions.FirstOrDefault(s => s.AssignmentId == assignmentId && s.StudentId == studentId);
-            return _solutionDTOMapper.MapModel(sol);
+
+            var solutions = await _solutionRepository.FindAll(s => s.Id > 0, include: source => source.Include(s => s.Student).Include(s => s.Assignment).Include(s => s.Grade)); ; // Ensure this fetches all solutions or use a more optimized query
+            var sol = solutions.FirstOrDefault(s => s.AssignmentId == assignmentId && s.StudentId == studentId);
+            var solution = new SolutionStudentDTO
+            {
+                Id = sol.Id,
+                SolutionFile = sol.SolutionFile,
+                Notes = sol.Notes,
+                StudentId = sol.StudentId,
+                AssignmentId = sol.AssignmentId,
+                GradeId = sol.GradeId,
+                StudentName = sol.Student?.FullName, // Mapping Student's name
+                AssignmentTitle = sol.Assignment?.Title, // Mapping Assignment's title
+                GardeName = sol.Grade?.Grade
+
+            };
+            return solution;
         }
-
-
-        
     }
 }

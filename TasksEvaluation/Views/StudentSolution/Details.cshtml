@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Assignment Details";
     var student = ViewBag.Student as TasksEvaluation.Core.Entities.Business.Student;
-    var solution = ViewBag.Solution as TasksEvaluation.Core.DTOs.SolutionDTO;
+    var solution = ViewBag.Solution as TasksEvaluation.Core.DTOs.SolutionStudentDTO;
 }
 
 <h2>Assignment Details</h2>
@@ -12,6 +12,20 @@
     <div class="card-body">
         <h5 class="card-title">@Model.Title</h5>
         <p class="card-text">@Model.Description</p>
+
+        @if (solution.GradeId <= 0)
+        {
+
+            <p class="card-text">Your degree : Un Assigned</p>
+
+
+        }
+        else
+        {
+                    <p class="card-text">Your degree : @solution?.GardeName</p>
+        }
+
+
         <p class="card-text"><small class="text-muted">Deadline: @Model.DeadLine.ToString("MM/dd/yyyy")</small></p>
         @if (Model.DeadLine <= DateTime.Now)
         {
