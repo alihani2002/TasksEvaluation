@@ -1,0 +1,16 @@
+﻿@model CourseDTO
+
+@{
+    ViewData["Title"] = "Course Details";
+}
+
+<h2> Course : @Model.Title</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p>IS Compeleted : @Model.IsCompleted</p>
+        <!-- Display other details as needed -->
+    </div>
+</div>
+
+<a href="@Url.Action("Index", "CourseStd")" class="btn btn-secondary mt-3">Back to Courses</a>
