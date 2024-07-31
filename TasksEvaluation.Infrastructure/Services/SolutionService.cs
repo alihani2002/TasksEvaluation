@@ -14,7 +14,7 @@ using TasksEvaluation.Core.Mapper;
 
 namespace TasksEvaluation.Infrastructure.Services
 {
-    public class SolutionService : ISolutionService
+    public class SolutionService : ISolutionService 
     {
         private readonly IBaseMapper<Solution, SolutionDTO> _solutionDTOMapper;
         private readonly IBaseMapper<SolutionDTO, Solution> _solutionMapper;
@@ -58,7 +58,7 @@ namespace TasksEvaluation.Infrastructure.Services
         public async Task<SolutionDTO> GetSolution(int id) => _solutionDTOMapper.MapModel(await _solutionRepository.GetById(id));
         public async Task<SolutionStudentDTO> GetSolutionWithStudent(int id) {
 
-           var sol= await _solutionRepository.Find(s => s.Id == id, include: source => source.Include(s => s.Student).Include(s => s.Assignment).Include(s => s.Grade));
+           var sol= await _solutionRepository.Find(s => s.Id == id, include: source => source.Include(s => s.Student).Include(s => s.Assignment));
             var  solution = new SolutionStudentDTO
             {
                 Id = sol.Id,
@@ -69,7 +69,6 @@ namespace TasksEvaluation.Infrastructure.Services
                 GradeId = sol.GradeId,
                 StudentName = sol.Student?.FullName, // Mapping Student's name
                 AssignmentTitle = sol.Assignment?.Title , // Mapping Assignment's title
-                GardeName = sol.Grade?.Grade
 
 
             };
@@ -78,7 +77,7 @@ namespace TasksEvaluation.Infrastructure.Services
         public async Task<IEnumerable<SolutionDTO>> GetSolutions() => _solutionDTOMapper.MapList(await _solutionRepository.GetAll());
         public async Task<IEnumerable<SolutionStudentDTO>> GetStudenSolutions()
         {
-            var solutions = await _solutionRepository.FindAll(s => s.Id > 0, include: source => source.Include(s => s.Student).Include(s => s.Assignment).Include(s => s.Grade));
+            var solutions = await _solutionRepository.FindAll(s => s.Id > 0, include: source => source.Include(s => s.Student).Include(s => s.Assignment));
             return solutions.Select(solution => new SolutionStudentDTO
             {
                 Id = solution.Id,
@@ -89,7 +88,6 @@ namespace TasksEvaluation.Infrastructure.Services
                 GradeId = solution.GradeId,
                 StudentName = solution.Student?.FullName, // Mapping Student's name
                 AssignmentTitle = solution.Assignment?.Title , // Mapping Assignment's title
-                GardeName = solution.Grade?.Grade
 
             }).ToList();
         }
@@ -200,25 +198,13 @@ namespace TasksEvaluation.Infrastructure.Services
 
 
 
-        public async Task<SolutionStudentDTO> GetSolution(int assignmentId, int studentId)
+        public async Task<SolutionDTO> GetSolution(int assignmentId, int studentId)
         {
-
-            var solutions = await _solutionRepository.FindAll(s => s.Id > 0, include: source => source.Include(s => s.Student).Include(s => s.Assignment).Include(s => s.Grade)); ; // Ensure this fetches all solutions or use a more optimized query
+            var solutions = await _solutionRepository.GetAll(); // Ensure this fetches all solutions or use a more optimized query
             var sol = solutions.FirstOrDefault(s => s.AssignmentId == assignmentId && s.StudentId == studentId);
-            var solution = new SolutionStudentDTO
-            {
-                Id = sol.Id,
-                SolutionFile = sol.SolutionFile,
-                Notes = sol.Notes,
-                StudentId = sol.StudentId,
-                AssignmentId = sol.AssignmentId,
-                GradeId = sol.GradeId,
-                StudentName = sol.Student?.FullName, // Mapping Student's name
-                AssignmentTitle = sol.Assignment?.Title, // Mapping Assignment's title
-                GardeName = sol.Grade?.Grade
-
-            };
-            return solution;
+            return _solutionDTOMapper.MapModel(sol);
         }
+
+
     }
 }
