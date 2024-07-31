@@ -86,7 +86,7 @@ namespace TasksEvaluation.Controllers
         // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,MobileNumber,Email,ProfilePic,GroupId")] StudentDTO studentDTO)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,MobileNumber,Email,GroupId")] StudentDTO studentDTO)
         {
             if (id != studentDTO.Id)
             {
