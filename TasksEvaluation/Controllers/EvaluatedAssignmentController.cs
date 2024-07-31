@@ -20,8 +20,15 @@ namespace TasksEvaluation.Controllers
             var studentJson = HttpContext.Session.GetString("Student");
             var student = studentJson == null ? null : JsonConvert.DeserializeObject<Student>(studentJson);
             ViewBag.Student = student;
-            var assignments = await _evaluatedAssignmentService.GetAssignmentsWithsolutions(student.Id);
-            return View(assignments);
+
+            if (student != null)
+            {
+                var assignments = await _evaluatedAssignmentService.GetAssignmentsWithsolutions(student.Id);
+                return View(assignments);
+            }
+
+            return RedirectToAction("Login", "StudentSolution");
+
         }
     }
 }

@@ -32,6 +32,7 @@ namespace TasksEvaluation.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            HttpContext.Session.SetString("Student", JsonConvert.SerializeObject(null));
             return View();
         }
 

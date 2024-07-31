@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TasksEvaluation.Areas.Identity.Data;
 using TasksEvaluation.Core.DTOs;
 using TasksEvaluation.Core.Entities.Business;
@@ -64,6 +65,7 @@ namespace TasksEvaluation.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            HttpContext.Session.SetString("Student", JsonConvert.SerializeObject(null));
             return View();
         }
 
@@ -71,6 +73,7 @@ namespace TasksEvaluation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDTO model)
         {
+            
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
@@ -90,6 +93,8 @@ namespace TasksEvaluation.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        
 
 
         //[HttpGet]
