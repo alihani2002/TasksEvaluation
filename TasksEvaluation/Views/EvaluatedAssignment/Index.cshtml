@@ -1,0 +1,16 @@
+﻿@model IEnumerable<TasksEvaluation.Core.DTOs.AssignmentDTO>
+
+@{
+    ViewData["Title"] = "Evaluated Assignments";
+}
+
+<h2>Evaluated Assignments</h2>
+
+
+
+        @foreach (var assignment in Model)
+        {
+            
+                <p>@assignment.Title</p>
+        }
+

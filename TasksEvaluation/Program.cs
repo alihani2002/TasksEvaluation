@@ -40,7 +40,7 @@ builder.Services.AddTransient<ISolutionService, SolutionService>();
 builder.Services.AddTransient<IStudentService, StudentService>();
 builder.Services.AddTransient<IGradeService, GradeService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
-
+builder.Services.AddTransient<IEvaluatedAssignmentService, EvaluatedAssignmentService>();
 
 
 // Register mappers
