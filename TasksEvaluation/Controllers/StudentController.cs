@@ -5,6 +5,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using TasksEvaluation.Infrastructure.Services;
 
 namespace TasksEvaluation.Controllers
 {
@@ -12,13 +14,16 @@ namespace TasksEvaluation.Controllers
     public class StudentController : Controller
     {
         private readonly IStudentService _studentService;
+        private readonly IGroupService _groupService;
         private readonly IMapper _mapper;
 
-        public StudentController(IStudentService studentService, IMapper mapper)
+        public StudentController(IStudentService studentService, IGroupService groupService, IMapper mapper)
         {
             _studentService = studentService;
+            _groupService = groupService;
             _mapper = mapper;
         }
+
 
         // GET: Student
         public async Task<IActionResult> Index()
@@ -40,8 +45,10 @@ namespace TasksEvaluation.Controllers
         }
 
         // GET: Student/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View();
         }
 
@@ -55,6 +62,9 @@ namespace TasksEvaluation.Controllers
                 await _studentService.Create(studentDTO);
                 return RedirectToAction(nameof(Index));
             }
+
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View(studentDTO);
         }
 
@@ -66,6 +76,10 @@ namespace TasksEvaluation.Controllers
             {
                 return NotFound();
             }
+
+
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View(student);
         }
 
@@ -91,6 +105,8 @@ namespace TasksEvaluation.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View(studentDTO);
         }
 

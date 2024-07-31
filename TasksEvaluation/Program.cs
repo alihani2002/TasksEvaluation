@@ -41,6 +41,8 @@ builder.Services.AddTransient<IStudentService, StudentService>();
 builder.Services.AddTransient<IGradeService, GradeService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<IEvaluatedAssignmentService, EvaluatedAssignmentService>();
+builder.Services.AddTransient<IGroupService, GroupService>();
+
 
 
 // Register mappers
@@ -54,6 +56,8 @@ builder.Services.AddScoped<IBaseMapper<UploadSolutionDTO, SolutionDTO>, BaseMapp
 builder.Services.AddScoped<IBaseMapper<SolutionDTO, UploadSolutionDTO>, BaseMapper<SolutionDTO, UploadSolutionDTO>>();
 builder.Services.AddScoped<IBaseMapper<Course, CourseDTO>, BaseMapper<Course, CourseDTO>>();
 builder.Services.AddScoped<IBaseMapper<CourseDTO, Course>, BaseMapper<CourseDTO, Course>>();
+builder.Services.AddScoped<IBaseMapper<Group, GroupDTO>, BaseMapper<Group, GroupDTO>>();
+builder.Services.AddScoped<IBaseMapper<GroupDTO, Group>, BaseMapper<GroupDTO, Group>>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)

@@ -20,6 +20,8 @@ namespace TasksEvaluation.Core.Mapper
             CreateMap<SolutionDTO, Solution>().ReverseMap();
             CreateMap<SolutionDTO, UploadSolutionDTO>().ReverseMap();
             CreateMap<Course, CourseDTO>().ReverseMap();
+            CreateMap<Group, GroupDTO>().ReverseMap();
+
 
             // Add other mappings here
         }
