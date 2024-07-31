@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TasksEvaluation.Core.DTOs;
 using TasksEvaluation.Core.Interfaces.IServices;
+using TasksEvaluation.Infrastructure.Services;
 
 namespace TasksEvaluation.Controllers
 {
@@ -10,12 +12,14 @@ namespace TasksEvaluation.Controllers
     public class AssignmentController : Controller
     {
         private readonly IAssignmentService _assignmentService;
+        private readonly IGroupService _groupService;
         private readonly IMapper _mapper;
 
-        public AssignmentController(IAssignmentService assignmentService, IMapper mapper)
+        public AssignmentController(IAssignmentService assignmentService, IMapper mapper, IGroupService groupService)
         {
             _assignmentService = assignmentService;
             _mapper = mapper;
+            _groupService = groupService;   
         }
 
         // GET: Assignment
@@ -37,8 +41,10 @@ namespace TasksEvaluation.Controllers
         }
 
         // GET: Assignment/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View();
         }
 
@@ -61,6 +67,8 @@ namespace TasksEvaluation.Controllers
                     ModelState.AddModelError("", $"An error occurred while creating the assignment: {ex.Message}");
                 }
             }
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View(assignmentDTO);
         }
 
@@ -75,6 +83,9 @@ namespace TasksEvaluation.Controllers
             {
                 return NotFound();
             }
+
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View(assignmentDTO);
         }
 
@@ -100,6 +111,8 @@ namespace TasksEvaluation.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            var groups = await _groupService.GetGroups(); // Fetch all groups again if model is invalid
+            ViewBag.Groups = new SelectList(groups, "Id", "Title");
             return View(assignmentDTO);
         }
 
