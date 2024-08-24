@@ -32,7 +32,7 @@
                 <a asp-controller="Solution" asp-action="Index" class="sidebar-link">Solution</a>
                 <a asp-controller="Course" asp-action="Index" class="sidebar-link">Course</a>
                 <a class="sidebar-link" asp-area="" asp-controller="Account" asp-action="Register">Add Admin</a>
-                <a href="#" class="sidebar-link">About</a>
+                <a asp-controller="About" asp-action="Index" class="sidebar-link">About</a>
             }
             else
             {
@@ -40,7 +40,7 @@
                 <a asp-controller="EvaluatedAssignment" asp-action="Index" class="sidebar-link">Evaluated Assignments</a>
                 <a asp-controller="CourseStd" asp-action="Index" class="sidebar-link">Course</a>
                 <a asp-controller="StudentSolution" asp-action="LogIn" class="sidebar-link">LogIn As Student</a>
-                <a href="#" class="sidebar-link">About</a>
+                <a asp-controller="About" asp-action="Index" class="sidebar-link">About</a>
             }
         </div>
         <div>
